@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Diabetes Risk Assessment</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body style="background: #f9fafb;">
+    <div class="assessment-header">
+        <a href="/" class="back-button">
+            <span>←</span> Back to Home
+        </a>
+        <div class="quick-assess-tag">
+            <span>⏱️</span> Quick Assessment
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-header">
+            <span>Quick Health Check</span>
+            <span>~2 minutes</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <h2>Quick Diabetes Risk Assessment</h2>
+        <p class="form-subtitle">Get a rapid evaluation using key health indicators.</p>
+
+        {% if error_message %}
+        <div class="error-message">
+            <h3>⚠️ Error:</h3>
+            <p>{{ error_message }}</p>
+        </div>
+        {% endif %}
+        
+        {% if prediction %}
+        <div class="prediction-result" style="background: #dcfce7; border: 2px solid #22c55e; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+            <h3 style="color: #15803d; margin-bottom: 0.5rem;">📊 Prediction Result:</h3>
+            <p style="font-size: 1.2rem; font-weight: bold; color: #166534;">{{ prediction }}</p>
+        </div>
+        {% endif %}
+
+        {% if suggestions %}
+        <div class="prediction-result" style="background:#dbeafe; border: 2px solid #3b82f6; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+            <h3 style="color: #1e40af; margin-bottom: 0.75rem;">🧠 AI Health Suggestions:</h3>
+            <div style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: #1e3a8a;">{{ suggestions }}</div>
+        </div>
+        
+        {% if risk_level == 'High' %}
+        <div style="background: #fee2e2; border: 2px solid #ef4444; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
+            <h3 style="color: #991b1b; margin-bottom: 1rem;">🚨 Immediate Action Required</h3>
+            <p style="color: #7f1d1d; margin-bottom: 1.5rem;">Your high diabetes risk requires urgent attention. Please use the resources below:</p>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <a href="/videos" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none; padding: 1rem;">
+                    🎥 Watch Educational Videos
+                </a>
+                <a href="/doctors" class="btn btn-success" style="flex: 1; text-align: center; text-decoration: none; padding: 1rem;">
+                    👨‍⚕️ Find Doctors Near You
+                </a>
+            </div>
+        </div>
+        {% elif risk_level == 'Moderate' %}
+        <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
+            <h3 style="color: #92400e; margin-bottom: 1rem;">⚠️ Prevention is Key</h3>
+            <p style="color: #78350f; margin-bottom: 1.5rem;">Take preventive measures now. Learn more about diabetes management:</p>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <a href="/videos" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none; padding: 1rem;">
+                    🎥 Prevention Videos
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div style="background: #d1fae5; border: 2px solid #10b981; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
+            <h3 style="color: #065f46; margin-bottom: 1rem;">✅ Keep Up the Good Work!</h3>
+            <p style="color: #047857; margin-bottom: 1.5rem;">Your risk is low. Stay informed to maintain your health:</p>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <a href="/videos" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none; padding: 1rem;">
+                    🎥 Health Tips Videos
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center; padding: 1rem; background: #f3f4f6; border-radius: 8px; margin-bottom: 1.5rem;">
+            <a href="/assessment" style="color: #374151; font-weight: 600; text-decoration: none;">
+                🔄 Take Another Assessment
+            </a>
+        </div>
+        {% endif %}
+
+        <form action="/assessment" method="post">
+            <div class="quick-form-group">
+                <label for="age">Age <span class="required-star">*</span></label>
+                <input type="number" id="age" name="age" placeholder="Enter your age in years" min="1" max="120" required>
+                <div class="input-hint">Low Risk: <40 years, Medium Risk: 40–59 years, High Risk: ≥60 years</div>
+            </div>
+
+            <div class="quick-form-group">
+                <label for="bmi">Body Mass Index (BMI) <span class="required-star">*</span></label>
+                <input type="number" id="bmi" name="bmi" placeholder="Enter your BMI (kg/m²)" min="0" max="70" step="0.1" required>
+                <div class="bmi-calculator">
+                    <input type="number" id="height" placeholder="Height (cm)" min="0" step="0.1">
+                    <input type="number" id="weight" placeholder="Weight (kg)" min="0" step="0.1">
+                    <button type="button" class="calculate-btn" onclick="calculateBMI()">Calculate BMI</button>
+                </div>
+                <div class="input-hint">Normal: 18.5–24.9, Overweight: 25–29.9, Obese: ≥30</div>
+            </div>
+
+            <div class="quick-form-group">
+                <label for="glucose">Fasting Glucose Level (mg/dL) <span class="required-star">*</span></label>
+                <input type="number" id="glucose" name="glucose" placeholder="Enter your fasting glucose level" min="0" max="300" step="1" required>
+                <div class="input-hint">Normal: 70-100 mg/dL, Prediabetes: 100-125 mg/dL, Diabetes: >126 mg/dL</div>
+            </div>
+
+            <div class="quick-form-group">
+                <label for="blood_pressure">Blood Pressure (mm Hg) <span class="required-star">*</span></label>
+                <input type="number" id="blood_pressure" name="blood_pressure" placeholder="Enter your blood pressure" min="0" max="200" step="1" required>
+                <div class="input-hint">Normal: <80 mm Hg, Elevated: 80–89 mm Hg, High: ≥90 mm Hg</div>
+            </div>
+
+            <div class="quick-form-group">
+                <label for="skin_thickness">Skin Thickness (mm) <span class="required-star">*</span></label>
+                <input type="number" id="skin_thickness" name="skin_thickness" placeholder="Enter your skin thickness" min="0" max="100" step="1" required>
+                <div class="input-hint">Normal: 10–30 mm, High (insulin resistance): >30 mm</div>
+            </div>
+
+            <div class="quick-form-group">
+                <label for="insulin">Insulin Level (mu U/ml) <span class="required-star">*</span></label>
+                <input type="number" id="insulin" name="insulin" placeholder="Enter your insulin level" min="0" max="900" step="1" required>
+                <div class="input-hint">Normal: 16–166 µU/mL, High: >166 µU/mL, Low: <16 µU/mL</div>
+            </div>
+
+            <div class="quick-form-group">
+                <label for="diabetes_pedigree">Family History of Diabetes <span class="required-star">*</span></label>
+                <input type="range" id="diabetes_pedigree" name="diabetes_pedigree" class="slider" min="0" max="2.5" step="0.1" value="0.5" oninput="updateSliderValue(this.value)">
+                <div class="slider-labels">
+                    <span>No History</span>
+                    <span>Some History</span>
+                    <span>Strong History</span>
+                </div>
+                <div class="slider-value">Current: <span id="sliderValue">0.5</span></div>
+            </div>
+
+            <button type="submit" class="submit-button">
+                <span>🚀</span> Get My Risk Assessment
+            </button>
+        </form>
+
+        <div class="comprehensive-link">
+            Want more detailed analysis?<br>
+            <a href="/comprehensive">Try our Comprehensive Assessment →</a>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <strong>⚠️ Disclaimer:</strong> This tool provides educational information only and should not replace professional medical advice. Please consult with healthcare providers for medical decisions.
+    </div>
+
+    <script>
+        function updateSliderValue(value) {
+            document.getElementById('sliderValue').textContent = value;
+        }
+
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            if (height && weight) {
+                const heightInMeters = height / 100;
+                const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+                document.getElementById('bmi').value = bmi;
+                alert('BMI calculated: ' + bmi);
+            } else {
+                alert('Please enter both height and weight');
+            }
+        }
+    </script>
+</body>
+</html>

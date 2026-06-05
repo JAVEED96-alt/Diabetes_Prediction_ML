@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Diabetes Doctors in Mysuru - DiabetesAI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .doctors-hero {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .doctors-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctors-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .doctors-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .filter-tag:hover, .filter-tag.active {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid #10b981;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .doctor-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .doctor-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .doctor-info h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .doctor-specialization {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .doctor-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .detail-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0fdf4;
+            border-radius: 6px;
+            color: #10b981;
+        }
+
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: #fef3c7;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .doctor-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .doctor-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-appointment {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-appointment:hover {
+            background: #059669;
+        }
+
+        .btn-profile {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-profile:hover {
+            background: #e5e7eb;
+        }
+
+        .back-nav {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #10b981;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #10b981;
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .info-banner {
+            background: #dbeafe;
+            border-left: 5px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .info-banner h4 {
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-banner p {
+            color: #1e3a8a;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .doctors-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .doctors-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .doctor-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .doctor-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body style="background: #f9fafb;">
+    <div class="back-nav">
+        <a href="/" class="back-link">
+            <span>←</span> Back to Home
+        </a>
+    </div>
+
+    <section class="doctors-hero">
+        <h1>👨‍⚕️ Best Diabetes <span style="color: #fbbf24;">Doctors in Mysuru</span></h1>
+        <p>Find trusted diabetologists and endocrinologists near you. Book appointments online.</p>
+    </section>
+
+    <div class="doctors-container">
+        <div class="info-banner">
+            <h4>📍 Showing results for: Mysuru, Karnataka</h4>
+            <p>All listed doctors are verified professionals with experience in diabetes care and management. Reviews and ratings are based on patient feedback.</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="🔍 Search by doctor name, clinic, or area..." onkeyup="searchDoctors(this.value)">
+            <div class="filter-tags">
+                <span class="filter-tag active" onclick="filterDoctors('all')">All Doctors</span>
+                <span class="filter-tag" onclick="filterDoctors('endocrinologist')">Endocrinologist</span>
+                <span class="filter-tag" onclick="filterDoctors('diabetologist')">Diabetologist</span>
+                <span class="filter-tag" onclick="filterDoctors('physician')">General Physician</span>
+            </div>
+        </div>
+
+        <div class="doctors-grid" id="doctorsGrid">
+            {% for d in doctors %}
+            <div class="doctor-card" data-specialty="{{ d.specialization.lower() }}">
+                <div class="doctor-header">
+                    <div class="doctor-avatar">👨‍⚕️</div>
+                    <div class="doctor-info">
+                        <h3>{{ d.name }}</h3>
+                        <span class="doctor-specialization">{{ d.specialization }}</span>
+                    </div>
+                </div>
+
+                <div class="doctor-details">
+                    <div class="detail-item">
+                        <span class="detail-icon">🎓</span>
+                        <span><strong>Experience:</strong> {{ d.experience }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">⭐</span>
+                        <span class="rating">{{ d.rating }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">🏥</span>
+                        <span><strong>Clinic:</strong> {{ d.clinic }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">📍</span>
+                        <span>{{ d.area }}</span>
+                    </div>
+                </div>
+
+                <div class="doctor-actions">
+                    <a href="{{ d.link }}" target="_blank" class="doctor-btn btn-appointment">
+                        <span>📅</span> Book Appointment
+                    </a>
+                    <a href="{{ d.link }}" target="_blank" class="doctor-btn btn-profile">
+                        <span>👤</span> View Profile
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Additional doctors that can be added -->
+            <div class="doctor-card" data-specialty="diabetologist">
+                <div class="doctor-header">
+                    <div class="doctor-avatar">👩‍⚕️</div>
+                    <div class="doctor-info">
+                        <h3>Dr. Priya Sharma</h3>
+                        <span class="doctor-specialization">Diabetologist & Endocrinologist</span>
+                    </div>
+                </div>
+
+                <div class="doctor-details">
+                    <div class="detail-item">
+                        <span class="detail-icon">🎓</span>
+                        <span><strong>Experience:</strong> 18+ years</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">⭐</span>
+                        <span class="rating">4.7★</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">🏥</span>
+                        <span><strong>Clinic:</strong> Vikram Hospital</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">📍</span>
+                        <span>Mysuru Road, Mysuru</span>
+                    </div>
+                </div>
+
+                <div class="doctor-actions">
+                    <a href="https://www.practo.com/mysore" target="_blank" class="doctor-btn btn-appointment">
+                        <span>📅</span> Book Appointment
+                    </a>
+                    <a href="https://www.practo.com/mysore" target="_blank" class="doctor-btn btn-profile">
+                        <span>👤</span> View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="doctor-card" data-specialty="endocrinologist">
+                <div class="doctor-header">
+                    <div class="doctor-avatar">👨‍⚕️</div>
+                    <div class="doctor-info">
+                        <h3>Dr. Suresh Kumar</h3>
+                        <span class="doctor-specialization">Endocrinologist</span>
+                    </div>
+                </div>
+
+                <div class="doctor-details">
+                    <div class="detail-item">
+                        <span class="detail-icon">🎓</span>
+                        <span><strong>Experience:</strong> 22+ years</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">⭐</span>
+                        <span class="rating">4.9★</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">🏥</span>
+                        <span><strong>Clinic:</strong> JSS Hospital</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">📍</span>
+                        <span>Bannimantap, Mysuru</span>
+                    </div>
+                </div>
+
+                <div class="doctor-actions">
+                    <a href="https://www.practo.com/mysore" target="_blank" class="doctor-btn btn-appointment">
+                        <span>📅</span> Book Appointment
+                    </a>
+                    <a href="https://www.practo.com/mysore" target="_blank" class="doctor-btn btn-profile">
+                        <span>👤</span> View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchDoctors(query) {
+            const cards = document.querySelectorAll('.doctor-card');
+            const searchTerm = query.toLowerCase();
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterDoctors(specialty) {
+            const cards = document.querySelectorAll('.doctor-card');
+            const tags = document.querySelectorAll('.filter-tag');
+
+            // Update active tag
+            tags.forEach(tag => tag.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter cards
+            cards.forEach(card => {
+                const cardSpecialty = card.dataset.specialty;
+                if (specialty === 'all' || cardSpecialty.includes(specialty)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Education Videos - DiabetesAI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .video-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .video-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .video-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .video-categories {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .video-content {
+            padding: 1.5rem;
+        }
+
+        .video-category-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #e0e7ff;
+            color: #4338ca;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .video-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #ef4444;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .video-link:hover {
+            background: #dc2626;
+        }
+
+        .back-nav {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .video-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body style="background: #f9fafb;">
+    <div class="back-nav">
+        <a href="/" class="back-link">
+            <span>←</span> Back to Home
+        </a>
+    </div>
+
+    <section class="video-hero">
+        <h1>🎥 Diabetes Education <span style="color: #fbbf24;">Videos</span></h1>
+        <p>Expert-curated educational content to help you prevent, manage, and understand diabetes better.</p>
+    </section>
+
+    <div class="video-container">
+        <div class="video-categories">
+            <button class="category-btn active" onclick="filterVideos('all')">All Videos</button>
+            <button class="category-btn" onclick="filterVideos('diet')">Diet & Nutrition</button>
+            <button class="category-btn" onclick="filterVideos('exercise')">Exercise</button>
+            <button class="category-btn" onclick="filterVideos('prevention')">Prevention</button>
+            <button class="category-btn" onclick="filterVideos('management')">Management</button>
+        </div>
+
+        <div class="video-grid" id="videoGrid">
+            <!-- Diet Videos -->
+            <div class="video-card" data-category="diet">
+                <div class="video-thumbnail">🥗</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Diet & Nutrition</span>
+                    <h3 class="video-title">Best Foods for Diabetics</h3>
+                    <p class="video-description">Learn which foods help control blood sugar and which ones to avoid. Complete meal planning guide.</p>
+                    <a href="https://www.youtube.com/results?search_query=best+foods+for+diabetics" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="diet">
+                <div class="video-thumbnail">🍽️</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Diet & Nutrition</span>
+                    <h3 class="video-title">Diabetes Diet Plan</h3>
+                    <p class="video-description">Complete 7-day meal plan with recipes designed specifically for diabetic patients.</p>
+                    <a href="https://www.youtube.com/results?search_query=diabetes+diet+plan" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="diet">
+                <div class="video-thumbnail">🥤</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Diet & Nutrition</span>
+                    <h3 class="video-title">Foods That Lower Blood Sugar</h3>
+                    <p class="video-description">Discover natural foods that can help reduce and stabilize your blood glucose levels.</p>
+                    <a href="https://www.youtube.com/results?search_query=foods+that+lower+blood+sugar" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <!-- Exercise Videos -->
+            <div class="video-card" data-category="exercise">
+                <div class="video-thumbnail">🏃</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Exercise</span>
+                    <h3 class="video-title">Exercise for Diabetes Control</h3>
+                    <p class="video-description">Safe and effective exercises to improve insulin sensitivity and manage blood sugar.</p>
+                    <a href="https://www.youtube.com/results?search_query=exercise+for+diabetes+control" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="exercise">
+                <div class="video-thumbnail">🚶</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Exercise</span>
+                    <h3 class="video-title">Walking to Control Blood Sugar</h3>
+                    <p class="video-description">How simple daily walks can dramatically improve your diabetes management.</p>
+                    <a href="https://www.youtube.com/results?search_query=walking+for+diabetes" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="exercise">
+                <div class="video-thumbnail">🧘</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Exercise</span>
+                    <h3 class="video-title">Yoga for Diabetics</h3>
+                    <p class="video-description">Gentle yoga poses and breathing exercises to help manage diabetes naturally.</p>
+                    <a href="https://www.youtube.com/results?search_query=yoga+for+diabetes" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <!-- Prevention Videos -->
+            <div class="video-card" data-category="prevention">
+                <div class="video-thumbnail">🛡️</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Prevention</span>
+                    <h3 class="video-title">How to Prevent Diabetes</h3>
+                    <p class="video-description">Evidence-based strategies to prevent type 2 diabetes through lifestyle changes.</p>
+                    <a href="https://www.youtube.com/results?search_query=how+to+prevent+diabetes" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="prevention">
+                <div class="video-thumbnail">🔄</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Prevention</span>
+                    <h3 class="video-title">Reverse Prediabetes Naturally</h3>
+                    <p class="video-description">Natural methods to reverse prediabetes before it becomes type 2 diabetes.</p>
+                    <a href="https://www.youtube.com/results?search_query=reverse+prediabetes+naturally" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <!-- Management Videos -->
+            <div class="video-card" data-category="management">
+                <div class="video-thumbnail">📊</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Management</span>
+                    <h3 class="video-title">Understanding Blood Sugar Levels</h3>
+                    <p class="video-description">Learn how to monitor and interpret your blood glucose readings effectively.</p>
+                    <a href="https://www.youtube.com/results?search_query=understanding+blood+sugar+levels" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="management">
+                <div class="video-thumbnail">💊</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Management</span>
+                    <h3 class="video-title">Diabetes Medication Guide</h3>
+                    <p class="video-description">Complete guide to diabetes medications, insulin, and when to take them.</p>
+                    <a href="https://www.youtube.com/results?search_query=diabetes+medication+guide" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="management">
+                <div class="video-thumbnail">📱</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Management</span>
+                    <h3 class="video-title">Living with Diabetes</h3>
+                    <p class="video-description">Tips and strategies for managing diabetes in your daily life successfully.</p>
+                    <a href="https://www.youtube.com/results?search_query=living+with+diabetes+tips" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="video-card" data-category="prevention">
+                <div class="video-thumbnail">🌿</div>
+                <div class="video-content">
+                    <span class="video-category-tag">Prevention</span>
+                    <h3 class="video-title">Natural Remedies for Diabetes</h3>
+                    <p class="video-description">Explore natural herbs and remedies that can support diabetes management.</p>
+                    <a href="https://www.youtube.com/results?search_query=natural+remedies+for+diabetes" target="_blank" class="video-link">
+                        <span>▶</span> Watch on YouTube
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterVideos(category) {
+            const cards = document.querySelectorAll('.video-card');
+            const buttons = document.querySelectorAll('.category-btn');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

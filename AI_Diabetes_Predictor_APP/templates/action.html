@@ -1,0 +1,217 @@
+from flask import Flask, render_template, request, redirect, url_for
+import pickle
+import numpy as np
+
+app = Flask(__name__)
+
+# Load ML model + scaler
+def load_model():
+    try:
+        with open('model.pkl', 'rb') as f:
+            model = pickle.load(f)
+        with open('scaler.pkl', 'rb') as f:
+            scaler = pickle.load(f)
+        return model, scaler
+    except Exception as e:
+        print("Model/scaler load failed:", e)
+        return None, None
+
+model, scaler = load_model()
+
+
+def generate_suggestions(input_data, risk_level):
+    suggestions = []
+
+    glucose = input_data['glucose']
+    bmi = input_data['bmi']
+    age = input_data['age']
+    bp = input_data['blood_pressure']
+    fam = input_data['diabetes_pedigree']
+
+    if risk_level == "Low":
+        suggestions.append("Your risk is low. Continue healthy diet and physical activity.")
+    elif risk_level == "Moderate":
+        suggestions.append("Your risk is moderate. Improve diet and exercise to prevent diabetes.")
+    else:
+        suggestions.append("Your risk is high. Please consult a doctor as soon as possible.")
+
+    if glucose >= 126:
+        suggestions.append("Your fasting glucose suggests diabetes. Seek a confirmatory HbA1c test.")
+    elif glucose >= 100:
+        suggestions.append("Your fasting glucose is prediabetic. Avoid sugary drinks, sweets & junk foods.")
+
+    if bmi >= 30:
+        suggestions.append("Your BMI is high. Try gradual weight reduction with more walking.")
+    elif 25 <= bmi < 30:
+        suggestions.append("Reducing 3–5 kg weight can significantly reduce diabetes risk.")
+
+    if bp >= 90:
+        suggestions.append("Blood pressure is high. Reduce salt and processed food.")
+    elif 80 <= bp < 90:
+        suggestions.append("Blood pressure is slightly elevated. Avoid stress & oily foods.")
+
+    if fam >= 1.5:
+        suggestions.append("Strong family history — regular check-up every year is recommended.")
+
+    if age >= 45:
+        suggestions.append("Due to age, regular screening every year is important.")
+
+    suggestions.append("Walk 30–45 minutes daily and avoid sugary drinks.")
+    suggestions.append("⚠ This is educational information only — consult a doctor for medical advice.")
+
+    return "\n".join(suggestions)
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/assessment", methods=["GET", "POST"])
+def assessment():
+    if request.method == "POST":
+        try:
+            input_data = {
+                'pregnancies': float(request.form.get("pregnancies", 0)),
+                'glucose': float(request.form.get("glucose", 0)),
+                'blood_pressure': float(request.form.get("blood_pressure", 0)),
+                'skin_thickness': float(request.form.get("skin_thickness", 0)),
+                'insulin': float(request.form.get("insulin", 0)),
+                'bmi': float(request.form.get("bmi", 0)),
+                'diabetes_pedigree': float(request.form.get("diabetes_pedigree", 0)),
+                'age': float(request.form.get("age", 0))
+            }
+
+            features = np.array([[input_data[key] for key in input_data]])
+            features_scaled = scaler.transform(features)
+
+            proba = float(model.predict_proba(features_scaled)[0][1])
+            
+            # Determine risk level
+            if proba < 0.20:
+                risk_level = "low"
+                emoji = "✅"
+            elif proba < 0.50:
+                risk_level = "moderate"
+                emoji = "⚠️"
+            else:
+                risk_level = "high"
+                emoji = "🚨"
+
+            prediction = f"{emoji} {risk_level.capitalize()} Risk of Diabetes (Probability: {proba:.1%})"
+            
+            # Redirect to action page with results
+            return redirect(url_for('action', prediction=prediction, risk=risk_level))
+
+        except Exception as e:
+            error_message = f"Error: {e}"
+            return render_template("assessment.html", error_message=error_message)
+    
+    return render_template("assessment.html")
+
+
+@app.route("/comprehensive", methods=["GET", "POST"])
+def comprehensive():
+    prediction = None
+    error_message = None
+    suggestions_text = None
+
+    if request.method == "POST":
+        try:
+            input_data = {
+                'pregnancies': float(request.form.get("pregnancies", 0)),
+                'glucose': float(request.form.get("glucose", 0)),
+                'blood_pressure': float(request.form.get("blood_pressure", 0)),
+                'skin_thickness': float(request.form.get("skin_thickness", 0)),
+                'insulin': float(request.form.get("insulin", 0)),
+                'bmi': float(request.form.get("bmi", 0)),
+                'diabetes_pedigree': float(request.form.get("diabetes_pedigree", 0)),
+                'age': float(request.form.get("age", 0))
+            }
+
+            features = np.array([[input_data[key] for key in input_data]])
+            features_scaled = scaler.transform(features)
+
+            proba = float(model.predict_proba(features_scaled)[0][1])
+            
+            if proba < 0.20:
+                risk_level = "low"
+                emoji = "✅"
+            elif proba < 0.50:
+                risk_level = "moderate"
+                emoji = "⚠️"
+            else:
+                risk_level = "high"
+                emoji = "🚨"
+
+            prediction = f"{emoji} {risk_level.capitalize()} Risk of Diabetes (Probability: {proba:.1%})"
+            
+            # Redirect to action page
+            return redirect(url_for('action', prediction=prediction, risk=risk_level))
+
+        except Exception as e:
+            error_message = f"Error: {e}"
+
+    return render_template("comprehensive.html", prediction=prediction, error_message=error_message, suggestions=suggestions_text)
+
+
+@app.route("/action")
+def action():
+    """Display the action plan page with results"""
+    return render_template("action.html")
+
+
+@app.route("/videos")
+def videos():
+    search_links = [
+        ("What to eat with diabetes", "https://www.youtube.com/results?search_query=what+to+eat+for+diabetes"),
+        ("Exercise for diabetes control", "https://www.youtube.com/results?search_query=diabetes+exercise"),
+        ("How to reverse diabetes naturally", "https://www.youtube.com/results?search_query=reverse+diabetes+naturally"),
+        ("Diabetes diet plan", "https://www.youtube.com/results?search_query=diabetes+diet+plan"),
+        ("Understanding blood sugar levels", "https://www.youtube.com/results?search_query=blood+sugar+levels+explained"),
+        ("Diabetes medication guide", "https://www.youtube.com/results?search_query=diabetes+medication+guide")
+    ]
+    return render_template("videos.html", search_links=search_links)
+
+
+@app.route("/doctors")
+def doctors():
+    doctors_list = [
+        {
+            "name": "Dr. Anish Behl",
+            "specialization": "General Physician — Diabetes Management",
+            "experience": "28+ years",
+            "rating": "4.8★",
+            "clinic": "Apollo BGS Hospitals",
+            "area": "Kuvempunagar, Mysuru",
+            "link": "https://www.practo.com/mysore/doctor/anish-behl-diabetologist"
+        },
+        {
+            "name": "Dr. Guru Prasad B V",
+            "specialization": "Diabetes & Hypertension",
+            "experience": "20+ years",
+            "rating": "4.7★",
+            "clinic": "Apollo Clinic",
+            "area": "Vani Vilas Mohalla, Mysuru",
+            "link": "https://www.practo.com/mysore/doctor/guru-prasad-b-v-general-physician"
+        },
+        {
+            "name": "Dr. Rajesh Kumar",
+            "specialization": "Endocrinologist - Diabetes Specialist",
+            "experience": "15+ years",
+            "rating": "4.6★",
+            "clinic": "Columbia Asia Hospital",
+            "area": "Mysuru",
+            "link": "https://www.practo.com/mysore"
+        }
+    ]
+    return render_template("doctors.html", doctors=doctors_list)
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

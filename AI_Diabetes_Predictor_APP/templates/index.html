@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Risk Assessment</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img width='34' src="https://www.citypng.com/public/uploads/preview/download-valentines-day-red-love-heart-png-704081694954938hmu46vnn1h.png" alt="Diabetes Logo">
+                </div>
+                <span class="logo-text">DiabetesAI</span>
+            </div>
+            <div class="tagline">AI-Powered Risk Assessment</div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Glucose sense: <span class="highlight">ML- Baded Diabetics Detection System</span></h1>
+        <p>Advanced machine learning model analyzes your health data to predict diabetes risk with medical-grade accuracy. Take control of your health today.</p>
+        <div class="button-group">
+            <a href="{{ url_for('assessment') }}" class="btn btn-primary">
+                <span>📊</span> Quick Check (2 min)
+            </a>
+           
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value">94%</div>
+            <div class="stat-label">Accuracy Rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🌲</div>
+            <div class="stat-value">RandomForest</div>
+            <div class="stat-label">ML Model</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">Features</div>
+        </div>
+    </section>
+
+    <section class="assessment-section" id="assessment-form">
+        <h2>Choose Your Assessment Type</h2>
+        <p>Select the assessment that fits your time and needs</p>
+        
+        <div class="assessment-cards">
+            <div class="assessment-card">
+                <div class="card-icon blue">📋</div>
+                <h3>Quick Assessment</h3>
+                <p>Get a basic diabetes risk evaluation in just 2 minutes with key health indicators.</p>
+                <a href="#form" class="card-link">Start Assessment →</a>
+            </div>
+
+            <div class="assessment-card">
+                <div class="card-icon green">📊</div>
+                <h3>Comprehensive Analysis</h3>
+                <p>Complete medical assessment with all 8 clinical parameters for maximum accuracy.</p>
+                <a href="#form" class="card-link">Start Assessment →</a>
+            </div>
+
+            <div class="assessment-card">
+                <div class="card-icon purple">📖</div>
+                <h3>Assessment History</h3>
+                <p>Track your diabetes risk assessments over time and see your overall health trends.</p>
+                
+            </div>
+        </div>
+    </section>
+
+    
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <div class="footer-logo-icon">❤️</div>
+            <span class="logo-text">DiabetesAI</span>
+        </div>
+        <p>This tool is for educational purposes and should not replace professional medical advice. Always consult with healthcare professionals before making medical decisions.</p>
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+        </div>
+    </footer>
+</body>
+</html>

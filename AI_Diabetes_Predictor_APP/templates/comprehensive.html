@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Diabetes Assessment</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body style="background: #f9fafb;">
+
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img width='34' src="https://www.citypng.com/public/uploads/preview/download-valentines-day-red-love-heart-png-704081694954938hmu46vnn1h.png">
+                </div>
+                <span class="logo-text">DiabetesAI</span>
+            </div>
+            <a href="/" style="text-decoration:none;color:#2563eb;font-weight:600;">⬅ Back to Home</a>
+        </nav>
+    </header>
+
+    <section class="hero" style="padding:2.5rem 1.5rem;">
+        <h1>📋 Comprehensive <span class="highlight">Assessment</span></h1>
+        <p>For highest accuracy using all 8 clinical parameters of diabetes prediction.</p>
+    </section>
+
+    <div class="form-card">
+        <h2>Complete Diabetes Risk Evaluation</h2>
+        <p class="form-subtitle">Enter all health details carefully for best prediction accuracy.</p>
+
+        {% if error_message %}
+        <div class="error-message"><p>{{ error_message }}</p></div>
+        {% endif %}
+
+        {% if prediction %}
+        <div class="prediction-result">
+            <h3>Prediction Result:</h3>
+            <pre style="white-space: pre-wrap;">{{ prediction }}</pre>
+        </div>
+        {% endif %}
+
+        {% if suggestions %}
+        <div class="prediction-result" style="background:#e0f2fe;border-color:#0284c7;">
+            <h3>🧠 AI Suggestions:</h3>
+            <pre style="white-space: pre-wrap;">{{ suggestions }}</pre>
+        </div>
+        {% endif %}
+
+        <form action="/assessment" method="POST">
+            <div class="quick-form-group">
+                <label>Age</label>
+                <input type="number" name="age" min="0" max="120" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>BMI (Body Mass Index)</label>
+                <input type="number" name="bmi" step="0.1" min="0" max="100" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>Glucose Level (mg/dL)</label>
+                <input type="number" name="glucose" min="0" max="500" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>Blood Pressure (mm Hg)</label>
+                <input type="number" name="blood_pressure" min="0" max="200" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>Skin Thickness (mm)</label>
+                <input type="number" name="skin_thickness" min="0" max="100" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>Insulin Level (mu U/ml)</label>
+                <input type="number" name="insulin" min="0" max="1000" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>Pregnancies</label>
+                <input type="number" name="pregnancies" min="0" max="20" required>
+            </div>
+
+            <div class="quick-form-group">
+                <label>Family History (Pedigree Score)</label>
+                <input type="number" name="diabetes_pedigree" step="0.1" min="0" max="3" required>
+            </div>
+
+            <button type="submit" class="submit-button">
+                <span>🚀</span> Get Comprehensive Result
+            </button>
+        </form>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Important:</strong>
+        This tool does not replace diagnosis. Please consult a registered doctor for medical decisions.
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <div class="footer-logo-icon">❤️</div>
+            <span class="logo-text">DiabetesAI</span>
+        </div>
+        <p>Stay healthy. Early prediction prevents complications.</p>
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/videos">Videos</a>
+            <a href="/doctors">Doctors</a>
+        </div>
+    </footer>
+
+</body>
+</html>
